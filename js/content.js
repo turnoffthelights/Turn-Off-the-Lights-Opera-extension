@@ -39,9 +39,9 @@ var autoplay = null, eastereggs = null, shortcutlight = null, eyen = null, eyea 
 // Install on www.stefanvd.net
 // Install on www.turnoffthelights.com
 if (window.location.href.match(/http:\/\/(.*stefanvd\.net\/.*|www\.stefanvd\.net\/.*\/.*)/i)|| window.location.href.match(/http:\/\/(.*turnoffthelights\.com\/.*|www\.turnoffthelights\.com\/.*\/.*)/i)){
-	if ($('turnoffthelights-chrome-install-button')) {
-		$('turnoffthelights-chrome-install-button').style.display = 'none';
-		$('turnoffthelights-chrome-thanks-button').style.display = '';
+	if ($('turnoffthelights-opera-install-button')) {
+		$('turnoffthelights-opera-install-button').style.display = 'none';
+		$('turnoffthelights-opera-thanks-button').style.display = '';
 	}
 }
 /* -------------------------------------------------- */
