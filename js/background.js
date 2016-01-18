@@ -3,7 +3,7 @@
 
 Turn Off the Lights
 The entire page will be fading to dark, so you can watch the videos as if you were in the cinema.
-Copyright (C) 2015 Stefan vd
+Copyright (C) 2016 Stefan vd
 www.stefanvd.net
 www.turnoffthelights.com
 
@@ -106,12 +106,10 @@ else{
 return true;
 });
 
-// end control
-
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-		chrome.storage.local.get(['pageaction'], function(chromeset){
-			if ((tab.url.match(/^http/i)) && (chromeset["pageaction"] != "true") && (chromeset["pageaction"] != true)) {
-					if(tabId){
+		chrome.storage.local.get(['pageaction'], function(chromeset){		
+			if ((tab.url.match(/^http/i)||tab.url.match(/^file/i)) && (chromeset["pageaction"] != "true") && (chromeset["pageaction"] != true)) {
+					if(tabId != null){
 					// fix Chrome bug, can't show icon on HDPI screen
 					// chrome.pageAction.setIcon({tabId: tab.id, path: {'19': 'icons/icon1.png', '38':'icons/icon1@2x.png'}});
 					// https://code.google.com/p/chromium/issues/detail?id=381383
@@ -122,18 +120,23 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 });
 
 chrome.pageAction.onClicked.addListener(function(tabs) {
-chrome.storage.local.get(['alllightsoff'], function(chromeset){
-if ((chromeset["alllightsoff"]!="true") && (chromeset["alllightsoff"]!=true)){
-chrome.tabs.executeScript(tabs.id, {file: "js/light.js"}, function() {if (chrome.runtime.lastError) {console.error(chrome.runtime.lastError.message);}});
+    chrome.storage.local.get(['alllightsoff'], function(chromeset){
+    if ((chromeset["alllightsoff"]!="true") && (chromeset["alllightsoff"]!=true)){
+    chrome.tabs.executeScript(tabs.id, {file: "js/light.js"}, function() {if (chrome.runtime.lastError) {
+    // console.error(chrome.runtime.lastError.message);
+    }});
 } else {
-chrome.tabs.executeScript(tabs.id, {file: "js/mastertab.js"}, function() {if (chrome.runtime.lastError) {console.error(chrome.runtime.lastError.message);}});
+    chrome.tabs.executeScript(tabs.id, {file: "js/mastertab.js"}, function() {if (chrome.runtime.lastError) {
+    // console.error(chrome.runtime.lastError.message);
+    }});
 }
 });
 });
 
 // contextMenus
 function onClickHandler(info, tab) {
-if (info.menuItemId == "totlvideo" || info.menuItemId == "totlpage") {chrome.tabs.executeScript(tab.id, {file: "js/light.js"});}
+var str = info.menuItemId;var resvideo = str.substring(0, 9);var respage = str.substring(0, 8);
+if (resvideo == "totlvideo" || respage == "totlpage") {chrome.tabs.executeScript(tab.id, {file: "js/light.js"});}
 else if (info.menuItemId == "totlguideemenu") {window.open("http://www.turnoffthelights.com/extension/operaguide.html", "_blank");}
 else if (info.menuItemId == "totldevelopmenu") {window.open("http://www.turnoffthelights.com/donate.html", "_blank");}
 else if (info.menuItemId == "totlratemenu") {window.open("https://addons.opera.com/en/extensions/details/turn-off-the-lights", "_blank");}
@@ -144,6 +147,12 @@ else if (info.menuItemId == "totlsharefacebook") {window.open("https://www.faceb
 else if (info.menuItemId == "totlsharegoogleplus") {window.open("https://plus.google.com/share?url=addons.opera.com/en/extensions/details/turn-off-the-lights", "_blank");}
 }
 
+chrome.runtime.onInstalled.addListener(function() {
+// check to remove all contextmenus
+chrome.contextMenus.removeAll(function() {
+//console.log("contextMenus.removeAll callback");
+});
+          
 // pageaction
 var sharemenusharetitle = chrome.i18n.getMessage("sharemenusharetitle");
 var sharemenuwelcomeguidetitle = chrome.i18n.getMessage("sharemenuwelcomeguidetitle");
@@ -161,40 +170,66 @@ chrome.contextMenus.create({"title": sharemenuratetitle, "type":"normal", "id": 
 
 // Create a parent item and two children.
 var parent = chrome.contextMenus.create({"title": sharemenusharetitle, "id": "totlsharemenu", "contexts":contexts});
-var child1 = chrome.contextMenus.create({"title": sharemenutellafriend, "id": "totlshareemail", "parentId": parent, "onclick": onClickHandler});
-var child2 = chrome.contextMenus.create({"title": sharemenusendatweet, "id": "totlsharetwitter", "parentId": parent, "onclick": onClickHandler});
-var child2 = chrome.contextMenus.create({"title": sharemenupostonfacebook, "id": "totlsharefacebook", "parentId": parent, "onclick": onClickHandler});
-var child2 = chrome.contextMenus.create({"title": sharemenupostongoogleplus, "id": "totlsharegoogleplus", "parentId": parent, "onclick": onClickHandler});
+var child1 = chrome.contextMenus.create({"title": sharemenutellafriend, "id": "totlshareemail", "parentId": parent});
+var child2 = chrome.contextMenus.create({"title": sharemenusendatweet, "id": "totlsharetwitter", "parentId": parent});
+var child3 = chrome.contextMenus.create({"title": sharemenupostonfacebook, "id": "totlsharefacebook", "parentId": parent});
+var child4 = chrome.contextMenus.create({"title": sharemenupostongoogleplus, "id": "totlsharegoogleplus", "parentId": parent});
+});
 
 chrome.contextMenus.onClicked.addListener(onClickHandler);
 
 // context menu for page and video
-var menupage;
-var menuvideo;
+var menupage = null;
+var menuvideo = null;
+var contextmenuadded = false;
+var contextarrayvideo = [];
+var contextarraypage = [];
 function checkcontextmenus(){
-// video
-var contexts = ["video"];
-for (var i = 0; i < contexts.length; i++){
-  var context = contexts[i];
-  var videotitle = chrome.i18n.getMessage("videotitle");
-  menuvideo = chrome.contextMenus.create({"title": videotitle, "type":"normal", "id": "totlvideo", "contexts":[context]});
-}
+    if(contextmenuadded == false){
+    contextmenuadded = true;
 
-// page
-var contexts = ["page","selection","link","editable","image","audio"];
-for (var i = 0; i < contexts.length; i++){
-  var context = contexts[i];
-  var pagetitle = chrome.i18n.getMessage("pagetitle");
-  menupage = chrome.contextMenus.create({"title": pagetitle, "type":"normal", "id": "totlpage", "contexts":[context]});
-}
+    // video
+    var contexts = ["video"];
+    for (var i = 0; i < contexts.length; i++){
+    var context = contexts[i];
+    var videotitle = chrome.i18n.getMessage("videotitle");
+    menuvideo = chrome.contextMenus.create({"title": videotitle, "type":"normal", "id": "totlvideo"+i, "contexts":[context]});
+    contextarrayvideo.push(menuvideo);
+    }
+
+    // page
+    var contexts = ["page","selection","link","editable","image","audio"];
+    for (var i = 0; i < contexts.length; i++){
+    var context = contexts[i];
+    var pagetitle = chrome.i18n.getMessage("pagetitle");
+    menupage = chrome.contextMenus.create({"title": pagetitle, "type":"normal", "id": "totlpage"+i, "contexts":[context]});
+    contextarraypage.push(menupage);
+    }
+    
+    }
 }
 
 function removecontexmenus(){
-chrome.contextMenus.remove(menuvideo);
-chrome.contextMenus.remove(menupage);
+    if (contextarrayvideo.length > 0) {
+        for (var i=0;i<contextarrayvideo.length;i++) {
+            if (contextarrayvideo[i] === undefined || contextarrayvideo[i] === null){}else{
+            chrome.contextMenus.remove(contextarrayvideo[i]);
+            }
+        }
+    }
+    if (contextarraypage.length > 0) {
+        for (var i=0;i<contextarraypage.length;i++) {
+            if (contextarraypage[i] === undefined || contextarraypage[i] === null){}else{
+            chrome.contextMenus.remove(contextarraypage[i]);
+            }
+        }
+    }
+    contextarrayvideo = [];
+    contextarraypage = [];
+    contextmenuadded = false;
 }
 
-try{ chrome.runtime.setUninstallUrl("http://www.turnoffthelights.com/extension/operauninstalled.html"); }
+try{ chrome.runtime.setUninstallUrl("https://www.turnoffthelights.com/extension/operauninstalled.html"); }
 catch(e){}
 
 // Fired when an update is available
@@ -205,11 +240,17 @@ if(localStorage["firstRun"] == "false"){ chrome.storage.local.set({"firstRun": "
 if(localStorage["version"] == "2.1"){ chrome.storage.local.set({"version": "2.1"}); }
 if(localStorage["version"] == "2.0.0.81"){ chrome.storage.local.set({"version": "2.0.0.81"}); }
 
+
+function initwelcome(){
 chrome.storage.local.get(['firstRun'], function(chromeset){
 if ((chromeset["firstRun"]!="false") && (chromeset["firstRun"]!=false)){
-  chrome.tabs.create({url: "http://www.turnoffthelights.com/extension/operawelcome.html", selected:true})
-  chrome.tabs.create({url: "http://www.turnoffthelights.com/extension/operaguide.html", selected:false})
+  var totlidextension = chrome.i18n.getMessage("@@extension_id");
+  chrome.tabs.create({url: "chrome-extension://"+totlidextension+"/options.html?welcome", selected:true})
+  chrome.tabs.create({url: "https://www.turnoffthelights.com/extension/operaguide.html", selected:false})
   chrome.storage.local.set({"firstRun": "false"});
   chrome.storage.local.set({"version": "2.4"});
 }
 });
+}
+
+initwelcome();
