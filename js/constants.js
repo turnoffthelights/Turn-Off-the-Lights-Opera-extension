@@ -24,6 +24,6 @@ var linkuninstall = "https://www.turnoffthelights.com/extension/operauninstalled
 var linkguide = "https://www.turnoffthelights.com/extension/operaguide.html";
 var linkshare = "https://www.turnoffthelights.com/shareextension.html";
 var linkthemedownload = "https://addons.opera.com/themes/details/turn-off-the-lights-theme/";
-var browsernewtab = "chrome://startpage";
+var browsernewtab = "opera://startpage";
 var browserstore = "https://addons.opera.com";
 var linkyoutube = "https://www.youtube.com/c/turnoffthelights?sub_confirmation=1";
