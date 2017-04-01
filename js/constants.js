@@ -23,7 +23,7 @@ var linkwelcomepage = "https://www.turnoffthelights.com/extension/operawelcome.h
 var linkuninstall = "https://www.turnoffthelights.com/extension/operauninstalled.html";
 var linkguide = "https://www.turnoffthelights.com/extension/operaguide.html";
 var linkshare = "https://www.turnoffthelights.com/shareextension.html";
-var linkthemedownload = "https://addons.opera.com/themes/details/turn-off-the-lights-theme/";
+var linkthemedownload = "https://www.turnoffthelights.com/browser/theme.html";
 var browsernewtab = "opera://startpage";
 var browserstore = "https://addons.opera.com";
 var linkyoutube = "https://www.youtube.com/c/turnoffthelights?sub_confirmation=1";
