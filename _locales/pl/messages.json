@@ -24,7 +24,7 @@
     "message":"Pasek oceny"
   },
   "desmousespotlightt":{
-    "message":"Włącz klikanie linków, kiedy obraz jest przyciemniony"
+    "message":"Włącz klikanie linków, Kiedy Jest przyciemniony obraz"
   },
   "desmousespotlights":{
     "message":"Włącz przyciemnianie ekranu, które jest zawsze aktywne i można klikać przez tą warstwę"
@@ -111,7 +111,7 @@
     "message":"Przestrzeń kosmiczna"
   },
   "deseastereggs":{
-    "message":"Naciśnięcie klawisza T dodaje kurtynę teatrową do ciemnej warstwy"
+    "message":"Naciśnięcie klawisza T dodaje Teatr kurtyna Do ciemniejszej warstwy"
   },
   "settings":{
     "message":"Ustawienia"
@@ -1033,7 +1033,7 @@
     "message":"Zawsze włączone dla wszystkich otwartych kart"
   },
   "titleprofilescreenclick":{
-    "message":"Włącz klikanie linków, kiedy obraz jest przyciemniony"
+    "message":"Włącz klikanie linków, Kiedy Jest przyciemniony obraz"
   },
   "titleprofilesubmit":{
     "message":"Wybierz te ustawienia"
@@ -1052,5 +1052,20 @@
   },
   "desastop":{
     "message":"stop"
+  },
+  "desvideozoom":{
+    "message":"Powiększ lub pomniejsz zawartość wideo za pomocą przycisków powiększania."
+  },
+  "titlevideoplayrate":{
+    "message":"Szybkość wideo"
+  },
+  "desplayrate":{
+    "message":"Domyślna prędkość odtwarzania"
+  },
+  "desspeedtoolbar":{
+    "message":"Pokazuj pasek odtwarzania w dotychczasowym odtwarzaczu wideo"
+  },
+  "desatmosontotlmode":{
+    "message":"Pokazuj efekt światła atmosfery tylko przy włączonym trybie TotL"
   }
 }
