@@ -1,12 +1,15 @@
 function $(id) { return document.getElementById(id); }
 // Install on www.stefanvd.net
 // Install on www.turnoffthelights.com
-if (window.location.href.match(/http:\/\/(.*stefanvd\.net\/.*|www\.stefanvd\.net\/.*\/.*)/i)|| window.location.href.match(/http:\/\/(.*turnoffthelights\.com\/.*|www\.turnoffthelights\.com\/.*\/.*)/i)){
-	if ($('turnoffthelights-opera-install-button')) {
+if(window.location.href.match(/^http(s)?:\/\/(www\.)?stefanvd.net/i)||window.location.href.match(/^http(s)?:\/\/(www\.)?turnoffthelights.com/i)){
+	if($('turnoffthelights-opera-install-button')){
 		$('turnoffthelights-opera-install-button').style.display = 'none';
-		$('turnoffthelights-opera-thanks-button').style.display = '';
+		$('turnoffthelights-opera-thanks-button').style.display = 'block';
 	}
 }
+var totlscreenshotpage = "https://www.turnoffthelights.com/extension/capture-screenshot-of-video.html";
+var developerwebsite = "https://www.turnoffthelights.com";
+var totloptionspage = "https://www.turnoffthelights.com/extension/options.html";
 var ambientaureaproduct = "https://addons.opera.com/extensions/details/ambient-aurea/";
 var datetodayproduct = "https://addons.opera.com/extensions/details/date-today/";
 var turnoffthelightsproduct = "https://addons.opera.com/extensions/details/turn-off-the-lights/";
@@ -27,3 +30,6 @@ var linkthemedownload = "https://www.turnoffthelights.com/browser/theme.html";
 var browsernewtab = "opera://startpage";
 var browserstore = "https://addons.opera.com";
 var linkyoutube = "https://www.youtube.com/c/turnoffthelights?sub_confirmation=1";
+var linkauroraplayerapp = "https://www.stefanvd.net/project/aurora-player/";
+var linktotlmobileapp = "https://www.turnoffthelights.com/mobile.html";
+var devmode = false;
