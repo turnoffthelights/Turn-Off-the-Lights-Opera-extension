@@ -3,7 +3,7 @@
 
 Turn Off the Lights
 The entire page will be fading to dark, so you can watch the video as if you were in the cinema.
-Copyright (C) 2019 Stefan vd
+Copyright (C) 2020 Stefan vd
 www.stefanvd.net
 www.turnoffthelights.com
 
@@ -143,14 +143,12 @@ location.reload();
 document.getElementById("sharestatsenergysaved").addEventListener('click', function(){
     var stefanvdurl = developerwebsite;
     var stefanvdaacodeurl = encodeURIComponent(stefanvdurl);
-    shareenergytext = chrome.i18n.getMessage("shareanalyticenergy", ""+currentkwh+"");
     window.open("https://twitter.com/share?url=" + stefanvdaacodeurl + "&text=" + shareenergytext + "&via=turnoffthelight", 'Share to Twitter','width=600,height=460,menubar=no,location=no,status=no');
 },false);
 
 document.getElementById("sharestatslove").addEventListener('click', function(){
     var stefanvdurl = developerwebsite;
     var stefanvdaacodeurl = encodeURIComponent(stefanvdurl);
-    shareenergytext = chrome.i18n.getMessage("shareanalyticlove", ""+currentkwh+"");
     window.open("https://twitter.com/share?url=" + stefanvdaacodeurl + "&text=" + sharelovetext + "&via=turnoffthelight", 'Share to Twitter','width=600,height=460,menubar=no,location=no,status=no');
 },false);
 
@@ -222,7 +220,16 @@ chrome.storage.sync.get(['analytics','siteengagement'], function(items){
       var kwhwithdark = currenttimeinhours * (65 * factorpower)/1000;
       var kwhwithregu = currenttimeinhours * (65 * 1)/1000;
       currentkwh = (kwhwithregu - kwhwithdark).toFixed(5);
-      shareenergytext = chrome.i18n.getMessage("shareanalyticenergy", ""+currentkwh+"");
+      // if less then 1W
+      var newsharewattvalue;
+      if(currentkwh < 1){
+        newsharewattvalue = (currentkwh*1000).toFixed(2);
+        shareenergytext = chrome.i18n.getMessage("shareanalyticenergyWh", ""+newsharewattvalue+"");
+      }else{
+        // if more then 1000W = 1kW
+        newsharewattvalue = currentkwh;
+        shareenergytext = chrome.i18n.getMessage("shareanalyticenergy", ""+newsharewattvalue+"");
+      }
       $("shareenergytext").innerText = shareenergytext;
 
       //----Chart1
@@ -397,6 +404,8 @@ chrome.storage.sync.get(['analytics','siteengagement'], function(items){
 });
 
 function createcharts(){
+// CSP
+Chart.platform.disableCSSInjection = true;
 // --- Begin chart1
 var ctx = document.getElementById("myChart").getContext('2d');
 var myChart = new Chart(ctx, {
